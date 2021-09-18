@@ -21,6 +21,7 @@ class ChecklistViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationController?.navigationBar.prefersLargeTitles = true // makes title of navigation bar large
         // Do any additional setup after loading the view.
         let item1 = ChecklistItem()
         item1.text = "walk the dog"
@@ -91,6 +92,19 @@ class ChecklistViewController: UITableViewController {
         }
         tableView.deselectRow(at: indexPath, animated: true)
     }
+    
+    override func tableView(
+        _ tableView: UITableView,
+        commit editingStyle: UITableViewCell.EditingStyle,
+        forRowAt indexPath: IndexPath
+    ) {
+        items.remove(at: indexPath.row) //remove item from data model, in addItem you append, here you remove
+        
+        let indexPaths = [indexPath]
+        tableView.deleteRows(at: indexPaths, with: .automatic) //delete corresponding row from table view
+    }
+    
+    
     //sets accessory, does not toggle, forexample, the checkmarks are originally set to false in the instance variables. this method helps display them at the very beginning accurately
     func configureCheckmark(
         for cell: UITableViewCell,
@@ -114,6 +128,20 @@ class ChecklistViewController: UITableViewController {
         label.text = item.text
     }
     
+    // MARK: - Actions
+    
+    @IBAction func addItem() {
+        let newRowIndex = items.count
+        
+        let item = ChecklistItem()
+        item.text = "I am a new row"
+        item.checked = true
+        items.append(item)
+        
+        let indexPath = IndexPath(row: newRowIndex, section:0)
+        let indexPaths = [indexPath] // [indexPath1,indexPath2, etc] if you want to insert more than 1 row
+        tableView.insertRows(at: indexPaths, with: .automatic)
+    }
     
 }
 
