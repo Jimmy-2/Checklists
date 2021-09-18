@@ -71,7 +71,7 @@ class ChecklistViewController: UITableViewController {
         let item = items[indexPath.row]
         
         
-        
+        //
         configureText(for: cell, with: item)
         configureCheckmark(for: cell, with: item)
         return cell
