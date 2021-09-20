@@ -7,7 +7,24 @@
 
 import UIKit
 
-class ChecklistViewController: UITableViewController {
+class ChecklistViewController: UITableViewController, AddItemViewControllerDelegate {
+    func addItemViewControllerDidCancel(_ controller: AddItemViewController) {
+        navigationController?.popViewController(animated: true)
+    }
+    
+    func addItemViewController(_ controller: AddItemViewController, didFinishAdding item: ChecklistItem) {
+        
+        let newRowIndex = items.count
+        items.append(item)
+        
+        let indexPath = IndexPath(row: newRowIndex, section: 0)
+        let indexPaths = [indexPath]
+        tableView.insertRows(at: indexPaths, with: .automatic)
+        
+        
+        navigationController?.popViewController(animated: true)
+    }
+    
     /*
     var row0item = ChecklistItem()
     var row1item = ChecklistItem()
@@ -15,6 +32,8 @@ class ChecklistViewController: UITableViewController {
     var row3item = ChecklistItem()
     var row4item = ChecklistItem()
     */
+    
+    //list of checklist items displayed on the screen
     var items = [ChecklistItem]()
     
     
@@ -130,6 +149,8 @@ class ChecklistViewController: UITableViewController {
     
     // MARK: - Actions
     
+    /*
+    
     @IBAction func addItem() {
         let newRowIndex = items.count
         
@@ -141,6 +162,20 @@ class ChecklistViewController: UITableViewController {
         let indexPath = IndexPath(row: newRowIndex, section:0)
         let indexPaths = [indexPath] // [indexPath1,indexPath2, etc] if you want to insert more than 1 row
         tableView.insertRows(at: indexPaths, with: .automatic)
+    }
+ 
+    */
+    
+    // MARK: - Navigation
+    override func prepare(
+        for segue: UIStoryboardSegue, sender: Any?
+    ) {
+        if segue.identifier == "AddItem" {
+            let controller = segue.destination as! AddItemViewController
+            
+            controller.delegate = self
+        }
+        
     }
     
 }

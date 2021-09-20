@@ -7,9 +7,20 @@
 
 import UIKit
 
+//protocol listing name of methods
+protocol AddItemViewControllerDelegate: class {
+    func addItemViewControllerDidCancel (
+        _ controller: AddItemViewController)
+    func addItemViewController(
+        _ controller: AddItemViewController, didFinishAdding item: ChecklistItem)
+}
+
 class AddItemViewController: UITableViewController, UITextFieldDelegate {
     @IBOutlet weak var doneBarButton: UIBarButtonItem!
     @IBOutlet weak var textField: UITextField!
+    
+    //delegates are usually declared as being weak
+    weak var delegate: AddItemViewControllerDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,12 +38,21 @@ class AddItemViewController: UITableViewController, UITextFieldDelegate {
     
     @IBAction func cancel() {
         //tells navigation controller to close Add Item screen with an animation and go to back to the previous screen
-        navigationController?.popViewController(animated: true)
+        //navigationController?.popViewController(animated: true)
+        
+        //when user taps the cancel button, additemviewcontrollerdidcancel messages gets sent back to delegate
+        delegate?.addItemViewControllerDidCancel(self)
     }
     
     @IBAction func done() {
-        print("Contents of the text field: \(textField.text!)")
-        navigationController?.popViewController(animated: true)
+        //print("Contents of the text field: \(textField.text!)")
+        //navigationController?.popViewController(animated: true)
+        
+        let item = ChecklistItem()
+        item.text = textField.text!
+        
+        //when done is tapped, additemviewcontroller(_:didfinishadding:) message gets passed along with new checklistitem object
+        delegate?.addItemViewController(self, didFinishAdding: item)
     }
     
     
